@@ -24,6 +24,10 @@
     border: 1px solid black;
 }
 
+.form-input-error {
+    border: 1px solid red;
+}
+
 .password-input {
     width: 100%;
 }
@@ -54,6 +58,14 @@
     color: #1F2A44;
 }
 
-.form-alternative-text{ 
+.error-text {
+    color: red;
+}
+
+.hidde {
+    visibility: hidden;
+}
+
+.form-alternative-text{
     font-size: 16px;
 }
