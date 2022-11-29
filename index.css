@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
+
+.form-control {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    margin-bottom: 4px;
+}
+
+.form-input {
+    width: 100%;
+    height: 36px;
+    border: 1px solid rgb(196, 196, 196);
+    transition: border-color 0.15s ease-in-out 0s;
+    border-radius: 5px;
+    outline: none;
+    font-size: 14px;
+}
+
+.form-input:focus {
+    border: 1px solid black;
+}
+
+.password-input {
+    width: 100%;
+}
+
+.form-button {
+    width: 100%;
+    height: 38px;
+    color: white;
+    font-weight: bold;
+    background-color: #3C4D76;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-button:hover {
+    box-shadow: rgb(60 77 118 / 65%) 0px 8px 25px -8px
+}
+
+.form-support-text{
+    margin-top: 36px;
+    text-align: center;
+}
+
+.form-text{
+    font-family: Jost, Helvetica, Arial, serif;
+    font-size: 12px;
+    color: #1F2A44;
+}
+
+.form-alternative-text{ 
+    font-size: 16px;
+}
