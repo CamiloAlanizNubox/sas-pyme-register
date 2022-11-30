@@ -1,3 +1,10 @@
+// constants
+const MIXPANEL_TOKEN = '1234';
+const INTERCOM_APP_ID = 'xptivtq2';
+const APPCUES_APP_ID = 80068;
+const HUBSPOT_APP_ID = 2081075;
+const HOTJAR_APP_ID = 2769400;
+
 //util
 const getQueryParam = (url, param) => {
   // Expects a raw URL
@@ -174,20 +181,17 @@ const nbxAnalytics = {
 };
 
 // Analitycs Init
-var mixpanelToken = '1234';
-if (mixpanelToken) {
+if (MIXPANEL_TOKEN) {
   nbxAnalytics.init({
     mixpanelActive: true,
-    mixpanelToken: mixpanelToken,
+    mixpanelToken: MIXPANEL_TOKEN,
   });
 }
 
 // Intercom Init
-const intercomAppId = 'xptivtq2';
-
-if (intercomAppId) {
+if (INTERCOM_APP_ID) {
   window['intercomSettings'] = {
-    app_id: intercomAppId,
+    app_id: INTERCOM_APP_ID,
   };
   (function () {
     const w = window;
@@ -210,7 +214,7 @@ if (intercomAppId) {
         const s = d.createElement('script');
         s.type = 'text/javascript';
         s.async = true;
-        s.src = 'https://widget.intercom.io/widget/' + intercomAppId;
+        s.src = 'https://widget.intercom.io/widget/' + INTERCOM_APP_ID;
         const x = d.getElementsByTagName('script')[0];
         x?.parentNode.insertBefore(s, x);
       };
@@ -225,7 +229,7 @@ if (intercomAppId) {
   })();
 
   window['Intercom']('boot', {
-    app_id: intercomAppId,
+    app_id: INTERCOM_APP_ID,
   });
 
   window['Intercom']('update', {
@@ -234,8 +238,6 @@ if (intercomAppId) {
 }
 
 // Appcues Init
-const appcuesAppId = 80068;
-
 const isScriptLoaded = (url) => {
   if (!url) {
     return false;
@@ -262,26 +264,23 @@ function addScript(url, id = null) {
   }
 }
 
-if (appcuesAppId) {
-  addScript(`//fast.appcues.com/${appcuesAppId}.js`);
+if (APPCUES_APP_ID) {
+  addScript(`//fast.appcues.com/${APPCUES_APP_ID}.js`);
 }
 
-var hubSpotAppId = 2081075;
-if (hubSpotAppId) {
-  addScript(`//js.hs-scripts.com/${hubSpotAppId}.js`, 'hs-script-loader');
+if (HUBSPOT_APP_ID) {
+  addScript(`//js.hs-scripts.com/${HUBSPOT_APP_ID}.js`, 'hs-script-loader');
 }
 
 // hotjar Init
-var hotjarAppId = 2769400;
-
 (function (h, o, t, j, a, r) {
   h['hj'] =
     h['hj'] ||
     function () {
-      // eslint-disable-next-line prefer-rest-params
+      // eslint-disable-next-line prefer-rest-params 
       (h['hj'].q = h['hj'].q || []).push(arguments);
     };
-  h['_hjSettings'] = { hjid: hotjarAppId, hjsv: 6 };
+  h['_hjSettings'] = { hjid: HOTJAR_APP_ID, hjsv: 6 };
   a = o.getElementsByTagName('head')[0];
   r = o.createElement('script');
   r.async = 1;
@@ -290,13 +289,8 @@ var hotjarAppId = 2769400;
 })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
 
 function processRegister(data, email, fullname) {
-  console.log(data); // JSON data parsed by `data.json()` call
-
   const { userId, token } = data.register;
   const { nextUrl, companyId } = data.globalStatus;
-
-  console.log('userId', userId);
-  console.log('token', token);
 
   // hotjar
   window.hj('identify', userId, {
@@ -368,6 +362,7 @@ function processRegister(data, email, fullname) {
     new URLSearchParams(window.location.search).get('isEmbed') === 'true';
 
   if (isEmbed) {
+     console.log('messageToParent', messageToParent)
      parent.window.postMessage(JSON.stringify(messageToParent), '*');
    } else {
      window.location = '/verify';
