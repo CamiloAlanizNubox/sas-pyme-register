@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+<style>
+
+:root {
+    --off-white: #f2f4ef;
+    --white: #fff;
+    --primary-color: #e68c74;
+    --secondary-color: #7a5059;
+    --light-accent-color: #dcb5a0;
+    --dark-accent-color: #ed7b6d;
+    --success-color: #7aa55b;
+    --error-color: #f44336;
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    background-color: var(--off-white);
+    display: grid;
+    font-family: sans-serif;
+    min-height: 100vh;
+    place-content: center;
+}
+
+h2 {
+    font-size: 2rem;
+    margin: 0 0 2rem;
+    text-align: center;
+}
+
+.container {
+    background-color: var(--white);
+    border-radius: 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+        rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+.form {
+    padding: 3rem 4rem;
+}
+
+.form-control {
+    margin-bottom: 1rem;
+    padding-bottom: 2rem;
+    position: relative;
+}
+
+.form-control label {
+    color: var(--secondary-color);
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-control input {
+    border: 1px solid var(--light-accent-color);
+    border-radius: 0.4rem;
+    display: block;
+    font-size: 1.4rem;
+    padding: 1rem;
+    width: 100%;
+    transition: border-color 0.5s;
+}
+
+.form-control input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+}
+
+.form-control.success input {
+    border-color: var(--success-color);
+}
+
+.form-control.error input {
+    border-color: var(--error-color);
+}
+
+.form-control small {
+    color: var(--error-color);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    visibility: hidden;
+}
+
+.form-control.error small {
+    visibility: visible;
+}
+
+.form button {
+    cursor: pointer;
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    color: var(--white);
+    border-radius: 0.4rem;
+    padding: 1rem 2rem;
+    display: block;
+    font-size: 1.6rem;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+</style>
+
+</head>
+
+<body>
+<div class="container">
+    <form action="#" id="form" class="form">
+        <h2>Register With Us</h2>
+        <div class="form-control">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter username">
+            <small>Username must be at least 3 characters</small>
+        </div>
+        <div class="form-control">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" placeholder="Enter email address">
+            <small>Field cannot be empty</small>
+        </div>
+        <div class="form-control">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter password">
+            <small>Password must be 8 or more characters</small>
+        </div>
+        <div class="form-control">
+            <label for="password-confirmation">Confirm Password</label>
+            <input type="password" id="password-confirmation" name="password-confirmation" placeholder="Enter password again">
+            <small>Passwords must match</small>
+        </div>
+        <button type="button" id="btnSubmit">Submit</button>
+    </form>
+</div>
+
+<script type="text/javascript" src="./index.js"></script>
+
+<script type="text/javascript">
+
+// Ejemplo implementando el metodo POST:
+async function postData(url = '', data = {}) {
+  // Opciones por defecto estan marcadas con un *
+  const response = await fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data) // body data type must match "Content-Type" header
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
+
+const btnSubmit = document.querySelector("#btnSubmit");
+const username = document.querySelector("#username");
+const email = document.querySelector("#email");
+const password = document.querySelector("#password");
+const passwordConfirmation = document.querySelector("#password-confirmation");
+
+
+const sendDataRegister = () => {
+    console.log('print values');
+    console.log('username', username.value);
+    console.log('email', email.value);
+    console.log('password', password.value);
+
+
+//    postData('https://api.pyme.nubox.com/bffauthregister-environment-pyme/register', 
+    postData('https://api.test-nubox.com/bffauthregister-develop/register', 
+        {
+            email: email.value,
+            fullName: username.value,
+            phone:"+56 2 2222 2222",
+            password: password.value
+        })
+      .then(data => {
+        processRegister(data, email.value, username.value);
+      });
+
+};
+
+btnSubmit.addEventListener("click", function (e) {
+    e.preventDefault();
+    sendDataRegister();
+});
+</script>
+
+</body>
+
+</html>
