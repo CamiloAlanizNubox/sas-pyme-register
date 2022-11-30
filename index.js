@@ -63,6 +63,11 @@ const validatePassword = (input) => {
         return;
     }
 
+    if (password.length < 8) {
+        setError(input, 'El largo minimo debe ser de 8 carácteres');
+        return;
+    }
+
     cleanError(input);
 }
 
