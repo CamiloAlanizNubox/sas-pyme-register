@@ -43,37 +43,32 @@ const validateEmail = (input) => {
     const email = getFieldValue(input);
 
     if (!email) {
-        setError(input, 'Ingresa un correo electrónico');
-        return;
+        return 'Ingresa un correo electrónico';
     }
 
     if (!matchEmailString(email)) {
-        setError(input, 'Ingresa una dirección de correo electrónico válida (Ej., SuNombre@su-empresa.com)');
-        return;
+        return 'Ingresa una dirección de correo electrónico válida (Ej., SuNombre@su-empresa.com)';
     }
 
-    cleanError(input);
+    return null;
 }
 
 const validatePassword = (input) => {
     const password = getFieldValue(input);
 
     if (!password) {
-        setError(input, 'Ingresa una contraseña');
-        return;
+        return 'Ingresa una contraseña';
     }
 
     if (password.length < 8) {
-        setError(input, 'El largo minimo debe ser de 8 carácteres');
-        return;
+        return 'El largo minimo debe ser de 8 carácteres';
     }
 
     if (password.length > 25) {
-        setError(input, 'El largo maximo debe ser de 25 carácteres');
-        return;
+        return 'El largo maximo debe ser de 25 carácteres';
     }
 
-    cleanError(input);
+    return null;
 }
 
 const addInputDelay = (callback) => setTimeout(() => callback(), 500);
@@ -90,11 +85,51 @@ const handlePasswordVisibilityToggle = () => {
     }
 }
 
+const checkEmailAvailability = async (email) => {
+    return postData('https://api.pyme.nubox.com/bffauthregister-environment-pyme/mailExists', { email: email});
+}
+
 const handleEmailInput = () => {
-    addInputDelay(() => validateEmail(emailField));
+    const error = validateEmail(emailField);
+
+    if (error) {
+        setError(emailField, error);
+        return;
+    }
+    checkEmailAvailability(emailField.value).then( response => {
+        console.log('email status', response);
+        if (
+            response.mailExists?.registered &&
+            !response.mailExists?.registration[0].verified
+        ) {
+            //email no verificado
+            console.log('no verificado');
+        } else if (
+            response.mailExists?.registered &&
+            response.mailExists?.registration[0].verified
+        ) {
+            // email ya existe
+            console.log('existe');
+        } else {
+            // no existe
+            cleanError(emailField);
+        }
+    } ).catch( error => {
+        console.log('error', error)
+        cleanError(emailField);
+    } );
 
 };
-const handlePasswordInput = () => addInputDelay(() => validatePassword(passwordField));
+const handlePasswordInput = () => {
+    const error = validatePassword(passwordField);
+
+    if (error) {
+        setError(passwordField, error);
+        return;
+    }
+
+    cleanError(passwordField);
+};
 
 
 
@@ -120,7 +155,7 @@ const registerRequest = (body) => {
             console.log(response);
             console.log(body);
             alert("Registrando");
-            processRegister(response, 'mail@mail.com');
+            processRegister(response, body.email);
         }))
         .catch(error => {
             console.log('error', error.message);
@@ -144,7 +179,7 @@ const handleSubmit = (event) => {
 
 togglePasswordElement.addEventListener('click', handlePasswordVisibilityToggle );
 
-emailField.addEventListener('change', handleEmailInput);
-passwordField.addEventListener('change', handlePasswordInput);
+emailField.addEventListener('change', () => addInputDelay(handleEmailInput));
+passwordField.addEventListener('change', () => addInputDelay(handlePasswordInput));
 
 formButton.addEventListener('click', handleSubmit);
