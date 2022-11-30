@@ -6,6 +6,9 @@ const togglePasswordElement = document.querySelector('#password-visibility-toggl
 const passwordEnableVisibility = document.querySelector('#enable-visibility');
 const passwordDisableVisibility = document.querySelector('#disable-visibility');
 
+const noVerifiedWarningElement = document.querySelector('#not-verified-warning');
+const recoveryOptionsElement = document.querySelector('#recovery-options');
+
 const getFieldValue = (input) => input.value;
 
 const setError = (input, message) => {
@@ -86,36 +89,53 @@ const handlePasswordVisibilityToggle = () => {
 }
 
 const checkEmailAvailability = async (email) => {
-    return postData('https://api.pyme.nubox.com/bffauthregister-environment-pyme/mailExists', { email: email});
+    return postData('https://api.test-nubox.com/bffauthregister-develop/mailExists', { email: email});
+}
+
+const showNotVerifiedWarning = () => {
+    noVerifiedWarningElement.classList.remove('none');
+}
+
+const hiddeNotVerifiedWarning = () => {
+    noVerifiedWarningElement.classList.add('none');
+}
+
+const showRecoveryOptions = () => {
+    recoveryOptionsElement.classList.remove('none');
+}
+
+const hiddeRecoveryOptions = () => {
+    recoveryOptionsElement.classList.add('none');
 }
 
 const handleEmailInput = () => {
     const error = validateEmail(emailField);
 
     if (error) {
+        hiddeNotVerifiedWarning();
+        hiddeRecoveryOptions();
         setError(emailField, error);
         return;
     }
     checkEmailAvailability(emailField.value).then( response => {
-        console.log('email status', response);
+        hiddeNotVerifiedWarning();
+        hiddeRecoveryOptions();
         if (
             response.mailExists?.registered &&
             !response.mailExists?.registration[0].verified
         ) {
-            //email no verificado
-            console.log('no verificado');
+            setError(emailField, '');
+            showNotVerifiedWarning();
         } else if (
             response.mailExists?.registered &&
             response.mailExists?.registration[0].verified
         ) {
-            // email ya existe
-            console.log('existe');
+            setError( emailField,'Ya estás registrado en el sistema');
+            showRecoveryOptions();
         } else {
-            // no existe
             cleanError(emailField);
         }
-    } ).catch( error => {
-        console.log('error', error)
+    } ).catch( () => {
         cleanError(emailField);
     } );
 
