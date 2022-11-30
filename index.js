@@ -150,7 +150,7 @@ const postData = async (url = '', data = {}) => {
 }
 
 const registerRequest = (body) => {
-    postData('https://api.pyme.nubox.com/bffauthregister-environment-pyme/register', body)
+    postData('https://api.test-nubox.com/bffauthregister-develop/register', body)
         .then((response => {
             console.log(response);
             console.log(body);
