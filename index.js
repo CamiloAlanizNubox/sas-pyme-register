@@ -68,6 +68,11 @@ const validatePassword = (input) => {
         return;
     }
 
+    if (password.length > 25) {
+        setError(input, 'El largo maximo debe ser de 25 carácteres');
+        return;
+    }
+
     cleanError(input);
 }
 
