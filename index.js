@@ -103,10 +103,43 @@ const validateForm = () => {
     console.log('is valid?');
 }
 
+const postData = async (url = '', data = {}) => {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    return response.json();
+}
+
+const registerRequest = (body) => {
+    postData('https://api.pyme.nubox.com/bffauthregister-environment-pyme/register', body)
+        .then((response => {
+            console.log(response);
+            alert("Registrado");
+        }))
+        .catch(error => {
+            console.log('error', error.message);
+            alert("Error");
+        });
+}
+
 const handleSubmit = (event) => {
     event.preventDefault()
     validateForm();
+    const email = getFieldValue(emailField);
+    const password = getFieldValue(passwordField);
+    const body = {
+        email,
+        password,
+        fullName: 'SIN_NOMBRE'
+    };
+    registerRequest(body);
 }
+
+
 togglePasswordElement.addEventListener('click', handlePasswordVisibilityToggle );
 
 emailField.addEventListener('change', handleEmailInput);
