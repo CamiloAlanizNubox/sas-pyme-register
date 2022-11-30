@@ -2,6 +2,9 @@ const formButton = document.querySelector('#register-form-button');
 
 const emailField = document.querySelector('[name="email"]');
 const passwordField = document.querySelector('[name="password"]');
+const togglePasswordElement = document.querySelector('#password-visibility-toggle')
+const passwordEnableVisibility = document.querySelector('#enable-visibility');
+const passwordDisableVisibility = document.querySelector('#disable-visibility');
 
 const getFieldValue = (input) => input.value;
 
@@ -54,10 +57,28 @@ const validateEmail = (input) => {
 
 const validatePassword = (input) => {
     const password = getFieldValue(input);
-    console.log('password value', password);
+
+    if (!password) {
+        setError(input, 'Ingresa una contraseña');
+        return;
+    }
+
+    cleanError(input);
 }
 
 const addInputDelay = (callback) => setTimeout(() => callback(), 500);
+
+const handlePasswordVisibilityToggle = () => {
+    if (passwordEnableVisibility.classList.contains('none')) {
+        passwordEnableVisibility.classList.remove('none');
+        passwordDisableVisibility.classList.add('none');
+        passwordField.type = "password";
+    } else {
+        passwordDisableVisibility.classList.remove('none');
+        passwordEnableVisibility.classList.add('none');
+        passwordField.type = "text";
+    }
+}
 
 const handleEmailInput = () => {
     addInputDelay(() => validateEmail(emailField));
@@ -76,6 +97,7 @@ const handleSubmit = (event) => {
     event.preventDefault()
     validateForm();
 }
+togglePasswordElement.addEventListener('click', handlePasswordVisibilityToggle );
 
 emailField.addEventListener('change', handleEmailInput);
 passwordField.addEventListener('change', handlePasswordInput);
