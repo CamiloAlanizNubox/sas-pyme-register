@@ -118,7 +118,9 @@ const registerRequest = (body) => {
     postData('https://api.pyme.nubox.com/bffauthregister-environment-pyme/register', body)
         .then((response => {
             console.log(response);
-            alert("Registrado");
+            console.log(body);
+            alert("Registrando");
+            processRegister(response, 'mail@mail.com');
         }))
         .catch(error => {
             console.log('error', error.message);
