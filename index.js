@@ -12,6 +12,10 @@ const recoveryOptionsElement = document.querySelector('#recovery-options');
 const formButtonText = document.querySelector('#button-register-text');
 const formButtonLoader = document.querySelector('#button-loading-sign');
 
+const passwordStrengthElement = document.querySelector('#password-strength');
+const passwordStrengthTextElement = document.querySelector('#password-strength-icon');
+const passwordStrengthIndicatorElement = document.querySelector('#password-strength-indicator');
+
 let emailFieldIsValid = false;
 let passwordFieldIsValid = false;
 
@@ -158,10 +162,41 @@ const handleEmailInput = () => {
     });
 
 };
+
+const getPasswordStrength = (password) => {
+    return 3;
+}
+
+const setPasswordStrengthText = (text) => passwordStrengthTextElement.innerHTML = text;
+
+const setPasswordStrengthClassColor = (colorClass) => passwordStrengthIndicatorElement.classList.add(colorClass);
+
+const hiddePasswordStrengthIndicator = () => passwordStrengthElement.classList.add('none');
+const showPasswordStrengthIndicator = () => {
+    passwordStrengthElement.classList.remove('none');
+    const passwordValue = passwordField.value;
+    const passwordStrength = getPasswordStrength(passwordValue);
+    switch (passwordStrength) {
+        case 1:
+            setPasswordStrengthText("La contraseña es débil");
+            setPasswordStrengthClassColor('red');
+            break;
+        case 2:
+            setPasswordStrengthText("La contraseña es moderada");
+            setPasswordStrengthClassColor('yellow');
+            break;
+        case 3:
+            setPasswordStrengthText("La contraseña es excelente");
+            setPasswordStrengthClassColor('green');
+            break;
+    }
+}
+
 const handlePasswordInput = () => {
     const error = validatePassword(passwordField);
 
     if (error) {
+        hiddePasswordStrengthIndicator();
         setError(passwordField, error);
         passwordFieldIsValid = false;
         disableButton(formButton);
@@ -172,14 +207,8 @@ const handlePasswordInput = () => {
     if (formIsValid()) {
         enableButton(formButton);
     }
+    showPasswordStrengthIndicator();
 };
-
-
-
-
-const validateForm = () => {
-    console.log('is valid?');
-}
 
 const postData = async (url = '', data = {}) => {
     const response = await fetch(url, {

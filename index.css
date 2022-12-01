@@ -80,18 +80,11 @@ a:hover {
     color: red;
 }
 
-.hidde {
-    visibility: hidden;
-}
-
 .visibility-icon {
     width: 22px;
     height: 22px;
 }
 
-.none {
-    display: none;
-}
 
 .form-alternative-text{
     font-size: 16px;
@@ -135,4 +128,34 @@ a:hover {
     animation: spin 2s linear infinite;
 }
 
+.password-strength-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
+.strength-color {
+    width: 34px;
+    height: 6px;
+    border-radius: 5px;
+}
+
+.red {
+    background-color: red;
+}
+
+.yellow {
+    background-color: #c7b121;
+}
+
+.green {
+    background-color: green;
+}
+
+.hidde {
+    visibility: hidden;
+}
+
+.none {
+    display: none;
+}
