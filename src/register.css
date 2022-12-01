@@ -5,6 +5,10 @@ html * {
     font-family: Jost, Helvetica, Arial, serif;
 }
 
+input {
+    box-sizing: border-box;
+}
+
 a, a:visited, a:active{
     text-decoration: none;
     color: #2D7FF9;
