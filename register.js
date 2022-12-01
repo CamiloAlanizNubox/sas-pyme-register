@@ -164,7 +164,20 @@ const handleEmailInput = () => {
 };
 
 const getPasswordStrength = (password) => {
-    return 3;
+    let strength = 0;
+    if (password.match(/[a-z]+/) || password.match(/[0-9]+/)) {
+        strength += 1;
+    }
+    if (password.match(/[A-Z]+/) || password.match(/[$@#&!]+/)) {
+        strength += 1;
+    }
+    if (password.length > 11) {
+        strength += 1;
+    }
+    if (password.length > 15) {
+        strength += 1;
+    }
+    return strength;
 }
 
 const setPasswordStrengthText = (text) => passwordStrengthTextElement.innerHTML = text;
@@ -186,6 +199,10 @@ const showPasswordStrengthIndicator = () => {
             setPasswordStrengthClassColor('yellow');
             break;
         case 3:
+            setPasswordStrengthText("La contraseña es buena");
+            setPasswordStrengthClassColor('green');
+            break;
+        case 4:
             setPasswordStrengthText("La contraseña es excelente");
             setPasswordStrengthClassColor('green');
             break;
@@ -276,7 +293,7 @@ const disableButton = (btnField) => {
 
 togglePasswordElement.addEventListener('click', handlePasswordVisibilityToggle );
 
-emailField.addEventListener('change', () => addInputDelay(handleEmailInput));
-passwordField.addEventListener('change', () => addInputDelay(handlePasswordInput));
+emailField.addEventListener('keyup', () => addInputDelay(handleEmailInput));
+passwordField.addEventListener('keyup', () => addInputDelay(handlePasswordInput));
 
 formButton.addEventListener('click', handleSubmit);
