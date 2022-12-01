@@ -1,5 +1,5 @@
 // constants
-const MIXPANEL_TOKEN = '1234';
+const MIXPANEL_TOKEN = 'd2fd7cb3c05e7b37d8e69cd25e57cd3c';
 const INTERCOM_APP_ID = 'xptivtq2';
 const APPCUES_APP_ID = 80068;
 const HUBSPOT_APP_ID = 2081075;
