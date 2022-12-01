@@ -9,6 +9,10 @@ const passwordDisableVisibility = document.querySelector('#disable-visibility');
 const noVerifiedWarningElement = document.querySelector('#not-verified-warning');
 const recoveryOptionsElement = document.querySelector('#recovery-options');
 
+
+let emailFieldIsValid = false;
+let passwordFieldIsValid = false;
+
 const getFieldValue = (input) => input.value;
 
 const setError = (input, message) => {
@@ -126,18 +130,30 @@ const handleEmailInput = () => {
         ) {
             setError(emailField, '');
             showNotVerifiedWarning();
+            emailFieldIsValid = false;
+            disableButton(formButton);
         } else if (
             response.mailExists?.registered &&
             response.mailExists?.registration[0].verified
         ) {
             setError( emailField,'Ya estás registrado en el sistema');
             showRecoveryOptions();
+            emailFieldIsValid = false;
+            disableButton(formButton);
         } else {
             cleanError(emailField);
+            emailFieldIsValid = true;
+            if (formIsValid()) {
+                enableButton(formButton);
+            }
         }
     } ).catch( () => {
         cleanError(emailField);
-    } );
+        emailFieldIsValid = true;
+        if (formIsValid()) {
+            enableButton(formButton);
+        }
+    });
 
 };
 const handlePasswordInput = () => {
@@ -145,10 +161,15 @@ const handlePasswordInput = () => {
 
     if (error) {
         setError(passwordField, error);
+        passwordFieldIsValid = false;
+        disableButton(formButton);
         return;
     }
-
+    passwordFieldIsValid = true;
     cleanError(passwordField);
+    if (formIsValid()) {
+        enableButton(formButton);
+    }
 };
 
 
@@ -185,7 +206,9 @@ const registerRequest = (body) => {
 
 const handleSubmit = (event) => {
     event.preventDefault()
-    validateForm();
+    if (!formIsValid()) {
+        return;
+    }
     const email = getFieldValue(emailField);
     const password = getFieldValue(passwordField);
     const body = {
@@ -194,6 +217,18 @@ const handleSubmit = (event) => {
         fullName: 'SIN_NOMBRE'
     };
     registerRequest(body);
+}
+
+const formIsValid = () => emailFieldIsValid && passwordFieldIsValid;
+
+const enableButton = (btnField) => {
+    btnField.disabled = false;
+    btnField.classList.remove('disabled');
+}
+
+const disableButton = (btnField) => {
+    btnField.disabled = true;
+    btnField.classList.add('disabled');
 }
 
 
