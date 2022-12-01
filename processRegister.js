@@ -297,8 +297,6 @@ function processRegister(data, email, fullname) {
     email,
   });
 
-  console.log('pasamos hotjar...');
-
   // mixpanel
   nbxAnalytics.identify(userId);
   nbxAnalytics.mixpanelUserSetProperties({
@@ -306,8 +304,6 @@ function processRegister(data, email, fullname) {
   });
   nbxAnalytics.mixpanelGroupRegister('CompanyId', companyId);
   nbxAnalytics.setCampaignThatReachesToUser();
-
-  console.log('mixpanle...');
 
   //hubspot
   const _hsq = (window._hsq = window._hsq || []);
@@ -318,8 +314,6 @@ function processRegister(data, email, fullname) {
     },
   ]);
   _hsq.push(['trackPageView']);
-
-  console.log('hubspot...');
 
   const messageToParent = {
     url: `${location.origin}/verify`,
@@ -340,8 +334,6 @@ function processRegister(data, email, fullname) {
     user_id: userId,
   });
 
-  console.log('Intercom...');
-
   // new session vars
   localStorage.setItem('pyme_token', token);
   sessionStorage.setItem('pyme_company_id', companyId);
@@ -354,15 +346,10 @@ function processRegister(data, email, fullname) {
   localStorage.setItem('pyme_not_verify_email', email);
   localStorage.setItem('pyme_not_verify_next_url', nextUrl);
 
-  console.log('localstorage...');
-
-  console.log('fin login....');
-
   const isEmbed =
     new URLSearchParams(window.location.search).get('isEmbed') === 'true';
 
   if (isEmbed) {
-     console.log('messageToParent', messageToParent)
      parent.window.postMessage(JSON.stringify(messageToParent), '*');
    } else {
      window.location = '/verify';
