@@ -174,13 +174,6 @@ const handlePasswordInput = () => {
     }
 };
 
-
-
-
-const validateForm = () => {
-    console.log('is valid?');
-}
-
 const postData = async (url = '', data = {}) => {
     const response = await fetch(url, {
         method: 'POST',
@@ -208,14 +201,11 @@ const registerRequest = (body) => {
     setButtonLoading(true);
     postData(REGISTER_ENDPOINT, body)
         .then((response => {
-            console.log(response);
-            console.log(body);
             setButtonLoading(false);
             processRegister(response, body.email);
         }))
         .catch(error => {
             setButtonLoading(false);
-            console.log('error', error.message);
             alert("Error");
         });
 }
