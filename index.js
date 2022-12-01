@@ -9,6 +9,8 @@ const passwordDisableVisibility = document.querySelector('#disable-visibility');
 const noVerifiedWarningElement = document.querySelector('#not-verified-warning');
 const recoveryOptionsElement = document.querySelector('#recovery-options');
 
+const formButtonText = document.querySelector('#button-register-text');
+const formButtonLoader = document.querySelector('#button-loading-sign');
 
 let emailFieldIsValid = false;
 let passwordFieldIsValid = false;
@@ -190,15 +192,29 @@ const postData = async (url = '', data = {}) => {
     return response.json();
 }
 
+const setButtonLoading = (isLoading) => {
+    if (isLoading) {
+        disableButton(formButton);
+        formButtonText.classList.add('none');
+        formButtonLoader.classList.remove('none');
+    } else {
+        enableButton(formButton);
+        formButtonText.classList.remove('none');
+        formButtonLoader.classList.add('none');
+    }
+}
+
 const registerRequest = (body) => {
+    setButtonLoading(true);
     postData('https://api.test-nubox.com/bffauthregister-develop/register', body)
         .then((response => {
             console.log(response);
             console.log(body);
-            alert("Registrando");
+            setButtonLoading(false);
             processRegister(response, body.email);
         }))
         .catch(error => {
+            setButtonLoading(false);
             console.log('error', error.message);
             alert("Error");
         });
