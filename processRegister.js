@@ -4,6 +4,8 @@ const INTERCOM_APP_ID = 'xptivtq2';
 const APPCUES_APP_ID = 80068;
 const HUBSPOT_APP_ID = 2081075;
 const HOTJAR_APP_ID = 2769400;
+const MAIL_EXISTS_ENDPOINT = 'https://api.test-nubox.com/bffauthregister-develop/mailExists';
+const REGISTER_ENDPOINT = 'https://api.test-nubox.com/bffauthregister-develop/register';
 
 //util
 const getQueryParam = (url, param) => {

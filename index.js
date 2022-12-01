@@ -95,7 +95,7 @@ const handlePasswordVisibilityToggle = () => {
 }
 
 const checkEmailAvailability = async (email) => {
-    return postData('https://api.test-nubox.com/bffauthregister-develop/mailExists', { email: email});
+    return postData(MAIL_EXISTS_ENDPOINT, { email: email});
 }
 
 const showNotVerifiedWarning = () => {
@@ -206,7 +206,7 @@ const setButtonLoading = (isLoading) => {
 
 const registerRequest = (body) => {
     setButtonLoading(true);
-    postData('https://api.test-nubox.com/bffauthregister-develop/register', body)
+    postData(REGISTER_ENDPOINT, body)
         .then((response => {
             console.log(response);
             console.log(body);
