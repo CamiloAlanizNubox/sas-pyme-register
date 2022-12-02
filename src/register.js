@@ -262,7 +262,7 @@ const registerRequest = (body) => {
         }))
         .catch(error => {
             setButtonLoading(false);
-            alert("Error");
+            console.log(error);
         });
 }
 
