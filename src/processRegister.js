@@ -1,11 +1,8 @@
-// constants
-const MIXPANEL_TOKEN = 'd2fd7cb3c05e7b37d8e69cd25e57cd3c';
-const INTERCOM_APP_ID = 'xptivtq2';
-const APPCUES_APP_ID = 80068;
-const HUBSPOT_APP_ID = 2081075;
-const HOTJAR_APP_ID = 2769400;
-const MAIL_EXISTS_ENDPOINT = 'https://api.test-nubox.com/bffauthregister-develop/mailExists';
-const REGISTER_ENDPOINT = 'https://api.test-nubox.com/bffauthregister-develop/register';
+const MIXPANEL_TOKEN = process.env['MIXPANEL_TOKEN'];
+const INTERCOM_APP_ID = process.env['INTERCOM_APP_ID'];
+const APPCUES_APP_ID = process.env['APPCUES_APP_ID'];
+const HUBSPOT_APP_ID = process.env['HUBSPOT_APP_ID'];
+const HOTJAR_APP_ID = process.env['HOTJAR_APP_ID'];
 
 //util
 const getQueryParam = (url, param) => {
@@ -289,6 +286,66 @@ if (HUBSPOT_APP_ID) {
   r.src = t + h['_hjSettings'].hjid + j + h['_hjSettings'].hjsv;
   a.appendChild(r);
 })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+
+
+function trackAfterMixPanel(analytics){
+  const {
+      trackAfter = false,
+      setUserProperties = false,
+      shouldIdentify = false,
+      fieldToIdentify = '',
+      userProperties = {},
+      fieldsToTrack = fieldsToTrack && response.config.data
+        ? JSON.parse(response.config.data)
+        : {},
+      trackEventName,
+      responseDataToTrack = [],
+      responseDataToUserProperties = [],
+    } = analytics;
+
+    if (trackAfter) {
+      if (shouldIdentify) {
+        nbxAnalytics.identify(findAllByKey(response.data, fieldToIdentify)[0]);
+      }
+
+      if (setUserProperties) {
+        const responseObjectUserProperties = {};
+        // recorrer propiedad de usuario a guardar para obtenerlo desde respuesta
+        responseDataToUserProperties.forEach(({ name, getFrom, treatment }) => {
+          const nameWithoutDollarSign = name.replace('$', '');
+          let value = findAllByKey(
+            response.data,
+            getFrom || nameWithoutDollarSign
+          )[0];
+
+          if (treatment === treatmentTypes.decodeJWT) {
+            value = jwt_decode(value)[nameWithoutDollarSign];
+          }
+
+          responseObjectUserProperties[name] = value;
+        });
+
+        mixpanelUserSetProperties({
+          ...responseObjectUserProperties,
+          ...userProperties,
+        });
+      }
+
+      const responseObjectTrack = {};
+      responseDataToTrack.forEach((key) => {
+        let value = findAllByKey(response.data, key)[0];
+
+        responseObjectTrack[key] = value;
+      });
+
+      track(trackEventName, {
+        estadoSolicitud: 'exitoso',
+        ...fieldsToTrack,
+        ...responseObjectTrack,
+      });
+    }
+}
+
 
 function processRegister(data, email, fullname) {
   const { userId, token } = data.register;

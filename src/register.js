@@ -1,3 +1,6 @@
+const MAIL_EXISTS_ENDPOINT = process.env['ENDPOINT_MAIL_EXISTS'];
+const REGISTER_ENDPOINT = process.env['ENDPOINT_REGISTER'];
+
 const formButton = document.querySelector('#register-form-button');
 
 const emailField = document.querySelector('[name="email"]');
