@@ -1,0 +1,1 @@
+const processRegister = require('./processRegister'); //para que dotenv reemplaza las variables de entorno
