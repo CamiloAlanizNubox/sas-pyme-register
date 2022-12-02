@@ -21,6 +21,18 @@ const getQueryParam = (url, param) => {
   }
 };
 
+const findAllByKey = (obj, keyToFind) => {
+  return Object.entries(obj).reduce(
+    (acc, [key, value]) =>
+      key === keyToFind
+        ? acc.concat(value)
+        : typeof value === "object"
+        ? acc.concat(findAllByKey(value, keyToFind))
+        : acc,
+    []
+  );
+};
+
 const nbxAnalytics = {
   //mix panel init
   _mixpanelInit: function (f, b) {
@@ -288,7 +300,7 @@ if (HUBSPOT_APP_ID) {
 })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
 
 
-function trackAfterMixPanel(analytics){
+function trackAfterMixPanel(analytics, response){
   const {
       trackAfter = false,
       setUserProperties = false,
@@ -305,7 +317,7 @@ function trackAfterMixPanel(analytics){
 
     if (trackAfter) {
       if (shouldIdentify) {
-        nbxAnalytics.identify(findAllByKey(response.data, fieldToIdentify)[0]);
+        nbxAnalytics.identify(findAllByKey(response, fieldToIdentify)[0]);
       }
 
       if (setUserProperties) {
@@ -314,7 +326,7 @@ function trackAfterMixPanel(analytics){
         responseDataToUserProperties.forEach(({ name, getFrom, treatment }) => {
           const nameWithoutDollarSign = name.replace('$', '');
           let value = findAllByKey(
-            response.data,
+            response,
             getFrom || nameWithoutDollarSign
           )[0];
 
@@ -325,7 +337,7 @@ function trackAfterMixPanel(analytics){
           responseObjectUserProperties[name] = value;
         });
 
-        mixpanelUserSetProperties({
+        nbxAnalytics.mixpanelUserSetProperties({
           ...responseObjectUserProperties,
           ...userProperties,
         });
@@ -333,12 +345,12 @@ function trackAfterMixPanel(analytics){
 
       const responseObjectTrack = {};
       responseDataToTrack.forEach((key) => {
-        let value = findAllByKey(response.data, key)[0];
+        let value = findAllByKey(response, key)[0];
 
         responseObjectTrack[key] = value;
       });
 
-      track(trackEventName, {
+      nbxAnalytics.track(trackEventName, {
         estadoSolicitud: 'exitoso',
         ...fieldsToTrack,
         ...responseObjectTrack,
@@ -347,7 +359,7 @@ function trackAfterMixPanel(analytics){
 }
 
 
-function processRegister(data, email, fullname) {
+export function processRegister(data, email, fullname) {
   const { userId, token } = data.register;
   const { nextUrl, companyId } = data.globalStatus;
 
@@ -363,6 +375,20 @@ function processRegister(data, email, fullname) {
   });
   nbxAnalytics.mixpanelGroupRegister('CompanyId', companyId);
   nbxAnalytics.setCampaignThatReachesToUser();
+  trackAfterMixPanel({
+      trackAfter: true,
+      setUserProperties: true,
+      shouldIdentify: true,
+      userProperties: {
+        $email: email,
+        $name: fullname,
+        telefono: '',
+      },
+      fieldsToTrack: {},
+      trackEventName: 'Iniciar prueba gratis',
+      responseDataToTrack: ["userId"],
+      fieldToIdentify: "userId",
+    }, data)
 
   //hubspot
   const _hsq = (window._hsq = window._hsq || []);

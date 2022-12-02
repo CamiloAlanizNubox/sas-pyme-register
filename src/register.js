@@ -1,3 +1,5 @@
+const processRegister = require('./processRegister');
+
 const MAIL_EXISTS_ENDPOINT = process.env['ENDPOINT_MAIL_EXISTS'];
 const REGISTER_ENDPOINT = process.env['ENDPOINT_REGISTER'];
 
@@ -258,7 +260,7 @@ const registerRequest = (body) => {
     postData(REGISTER_ENDPOINT, body)
         .then((response => {
             setButtonLoading(false);
-            processRegister(response, body.email);
+            processRegister.processRegister(response, body.email, body.fullName);
         }))
         .catch(error => {
             setButtonLoading(false);
